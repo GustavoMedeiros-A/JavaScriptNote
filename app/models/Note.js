@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-let noteSchema = new mongoose.Schema({
+const noteSchema = mongoose.Schema({
     title: String,
     body: String,
     created_at: { type: Date, default: Date.now },
@@ -12,4 +12,4 @@ let noteSchema = new mongoose.Schema({
     }
 });
 
-module.export = mongoose.model("Note", noteSchema);
+module.exports = mongoose.model("Note", noteSchema);

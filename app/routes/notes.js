@@ -44,8 +44,6 @@ router.put('/:id', withAuth, async (req, res) => {
     const { title, body } = req.body;
     const { id } = req.params;
 
-
-
     try {
         let note = await Note.findById(id);
         if(isOwner(req.user, note)) {
@@ -63,6 +61,22 @@ router.put('/:id', withAuth, async (req, res) => {
     }
 
 })
+
+router.delete("/:id", withAuth, async (req, res) => {
+
+    const { id } = req.params;
+    try {
+        let note = await Note.findById(id);
+        if(isOwner(req.user, note)) {
+            let note = await Note.findByIdAndRemove(id)
+            res.json({message: "ok"}).status(204);
+        } else {
+            res.status(403).json({error: "Permission denied: You cannot access this note"})
+        }
+    } catch (error) {
+        res.status(500).json({error: "Problem to delete a note"});
+    }
+    })
 
 const isOwner = (user, note) => {
     if(JSON.stringify(user._id) == JSON.stringify(note.author._id)){

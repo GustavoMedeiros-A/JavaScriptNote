@@ -17,6 +17,18 @@ router.post("/", withAuth, async (req, res) => { // When we call the withAuth, m
     }
 })
 
+router.get('/search', withAuth, async (req, res) => {
+    const { query } = req.query;
+    try {
+        let notes = await Note // Find all notes for this user (author)
+        .find({ author: req.user._id })
+        .find({ $text: {$search: query}}).catch(err => console.log("Erro 1: ", err)) // associate all to $text
+        res.json(notes);
+    } catch (error) {
+        res.status(500).json({error: error});
+    }
+});
+
 router.get("/:id", withAuth, async (req, res) => {
     try {
         const { id } = req.params;
